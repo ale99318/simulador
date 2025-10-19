@@ -1,90 +1,29 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <title>Gerente Deportivo</title>
-    <style>
-        body { font-family: sans-serif; padding: 20px; }
-        /* Ocultamos las pantallas 2 y 3 por defecto */
-        #screen-2-stadium { display: none; }
-        #screen-3-game { display: none; }
+<div id="screen-3-game">
+    <h1><span id="display-club-name"></span></h1>
+    
+    <div class="kpi">Semana: <span id="display-week">1</span></div>
+    <div class="kpi">Temporada: <span id="display-season">1</span></div>
+    <div class="kpi">Dinero: $<span id="display-money">10000</span></div>
+    <div class="kpi">Moral: <span id="display-morale">75</span></div>
+    
+    <hr>
 
-        input { font-size: 1.2em; padding: 5px; }
-        button { font-size: 1.2em; padding: 5px; cursor: pointer; }
-        .kpi { margin-bottom: 10px; font-size: 1.1em; }
-
-        /* Estilos para la elección de estadio */
-        .stadium-option {
-            border: 2px solid #ccc;
-            padding: 10px;
-            margin: 10px 0;
-            cursor: pointer;
-        }
-        .stadium-option:hover {
-            border-color: #007bff;
-            background-color: #f4f4f4;
-        }
-        .stadium-option.selected {
-            background-color: #e0f0ff;
-            border-color: #007bff;
-        }
-        /* (NUEVO) Estilos para Pros y Contras */
-        .pro { color: green; }
-        .con { color: red; }
-    </style>
-</head>
-<body>
-
-    <div id="screen-1-name">
-        <h1>Bienvenido, Gerente</h1>
-        <p>Elige el nombre de tu club para comenzar:</p>
-        <input type"text" id="club-name-input" placeholder="Ej: Sport Lima FC">
-        <button id="btn-to-stadium">Siguiente: Elegir Estadio</button>
+    <h2>Gestión del Estadio</h2>
+    <div class="kpi">Estadio: <span id="display-stadium-name"></span>
+        (Nivel: <span id="display-stadium-level">1</span>)
+        (Cap: <span id="display-stadium-capacity"></span>)
+    </div>
+    
+    <div id="stadium-management-controls">
+        <button id="btn-upgrade-stadium">Mejorar Estadio (Costo: $50,000)</button>
     </div>
 
-    <div id="screen-2-stadium">
-        <h1>Elección de Estadio</h1>
-        <p>Tu primera gran decisión financiera. ¿Dónde jugará tu club?</p>
-        
-        <div class="stadium-option" data-choice="propio">
-            <strong>Estadio Propio: "El Fortín"</strong>
-            <ul>
-                <li>Capacidad: 8,000</li>
-                <li>Costo (Mantenimiento): $1,500 / semana</li>
-                <li class="pro"><strong>Pro:</strong> Costo fijo muy bajo. Ideal para construir sin deudas.</li>
-                <li class="con"><strong>Contra:</strong> Techo de ingresos bajo. Será difícil crecer rápido.</li>
-            </ul>
-        </div>
-        
-        <div class="stadium-option" data-choice="alquilado">
-            <strong>Estadio Alquilado: "Estadio Nacional"</strong>
-            <ul>
-                <li>Capacidad: 35,000</li>
-                <li>Costo (Alquiler): $10,000 / semana</li>
-                <li class="pro"><strong>Pro:</strong> Enorme potencial de ingresos si llenas el estadio.</li>
-                <li class="con"><strong>Contra:</strong> Costo fijo altísimo. Riesgo de bancarrota si el equipo juega mal.</li>
-            </ul>
-        </div>
-        
-        <button id="btn-to-game">Comenzar Carrera</button>
-    </div>
-
-    <div id="screen-3-game">
-        <h1><span id="display-club-name"></span></h1>
-        
-        <div class="kpi">Semana: <span id="display-week">1</span></div>
-        <div class="kpi">Temporada: <span id="display-season">1</span></div>
-        <div class="kpi">Dinero: $<span id="display-money">10000</span></div>
-        <div class="kpi">Moral: <span id="display-morale">75</span></div>
-        <div class="kpi">Estadio: <span id="display-stadium-name"></span>
-            (Cap: <span id="display-stadium-capacity"></span>)
-        </div>
-        
-        <hr>
-        <button id="btn-next-week">Avanzar Semana</button>
-    </div>
-
-    <script src="main.js" type="module"></script>
-
-</body>
-</html>
+    <hr>
+    
+    <h2>Gestión Financiera</h2>
+    <label for="input-ticket-price">Precio de Entradas: $</label>
+    <input type="number" id="input-ticket-price" value="15" min="1">
+    
+    <hr>
+    <button id="btn-next-week">Avanzar Semana</button>
+</div>
