@@ -22,4 +22,4 @@ export const state = {
     style: "N/A",
     salary: 0
   }
-}; // <-- La línea 26 debe ser ESTA (la llave y el punto y coma)
+};
