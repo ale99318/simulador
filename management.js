@@ -1,6 +1,7 @@
 // management.js
 import { state } from './core.js';
-import { renderUI } from './ui.js';
+import { renderUI, closeCoachModal } from './ui.js';
+import { getAvailableCoaches } from './staff.js'; // ¡Importante!
 
 /**
  * Mejora el estadio
@@ -44,4 +45,52 @@ export function setTicketPrice(event) {
     state.ticketPrice = newPrice;
     console.log("Nuevo precio de entrada fijado en:", state.ticketPrice);
     renderUI(); 
+}
+
+
+// --- (NUEVAS FUNCIONES) ---
+
+/**
+ * Inicializa los listeners para la lista de entrenadores.
+ * ui.js "pinta" la lista, esta función les da "vida".
+ */
+export function initializeCoachListeners() {
+    // Busca los botones que "pintó" ui.js
+    const coachOptions = document.querySelectorAll('.coach-option');
+    
+    coachOptions.forEach(option => {
+        option.addEventListener('click', () => {
+            const coachId = option.dataset.id;
+            hireCoach(coachId);
+        });
+    });
+}
+
+/**
+ * Contrata un nuevo entrenador basado en su ID.
+ */
+function hireCoach(coachId) {
+    // 1. Encontrar al entrenador en la lista
+    const coaches = getAvailableCoaches();
+    const newCoach = coaches.find(coach => coach.id === coachId);
+
+    if (!newCoach) {
+        console.error("No se encontró el entrenador con ID:", coachId);
+        return;
+    }
+    
+    // 2. Despedir al anterior (si hay) y contratar al nuevo
+    console.log(`Despidiendo a ${state.coach.name}.`);
+    console.log(`Contratando a ${newCoach.name}.`);
+    
+    // 3. Actualizar el estado (core.js)
+    state.coach.name = newCoach.name;
+    state.coach.style = newCoach.style; // (Aún no lo usamos, pero lo guardamos)
+    state.coach.salary = newCoach.salary;
+    
+    // 4. Actualizar la UI principal
+    renderUI();
+    
+    // 5. Cerrar el modal
+    closeCoachModal();
 }
