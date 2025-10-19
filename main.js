@@ -5,6 +5,7 @@ import { advanceWeek } from './calendar.js';
 
 // --- Elementos de Pantalla 1 (Nombre) ---
 const screen1 = document.getElementById('screen-1-name');
+// ESTA LÍNEA (la 8) ES LA QUE PROBABLEMENTE TIENES MAL O TE FALTA
 const clubNameInput = document.getElementById('club-name-input');
 const btnToStadium = document.getElementById('btn-to-stadium');
 
@@ -29,7 +30,8 @@ let selectedStadiumChoice = null;
  */
 function goToStadiumScreen() {
     console.log("Botón 'Siguiente' presionado"); // Para depurar
-    const clubName = clubNameInput.value;
+    // Esta línea (la 28) es donde te da el error
+    const clubName = clubNameInput.value; 
 
     // Validación
     if (clubName.trim() === "") {
