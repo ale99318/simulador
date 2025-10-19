@@ -36,22 +36,8 @@ function initGame() {
     let selectedStadiumChoice = null;
     isGameOver = false;
 
-    // --- Conexión de Botones Iniciales (PRIMERO conectamos los eventos) ---
-    try {
-        btnToStadium.addEventListener('click', goToStadiumScreen);
-        stadiumOptions.forEach(option => {
-            option.addEventListener('click', handleStadiumSelect);
-        });
-        btnToGame.addEventListener('click', startGame);
-        btnRestart.addEventListener('click', handleRestart);
-        
-    } catch (e) {
-        console.error("¡ERROR FATAL al conectar botones!");
-        console.error(e);
-    }
-
-    // --- Lógica de Flujo (DESPUÉS definimos las funciones) ---
-    function goToStadiumScreen() {
+    // --- Lógica de Flujo (definimos las funciones PRIMERO) ---
+    const goToStadiumScreen = () => {
         const clubName = clubNameInput.value;
         if (clubName.trim() === "") {
             alert("Por favor, escribe un nombre para tu club."); 
@@ -60,15 +46,15 @@ function initGame() {
         state.club = clubName;
         screen1.style.display = "none";
         screen2.style.display = "block";
-    }
+    };
 
-    function handleStadiumSelect(event) {
+    const handleStadiumSelect = (event) => {
         selectedStadiumChoice = event.currentTarget.dataset.choice;
         stadiumOptions.forEach(option => option.classList.remove('selected'));
         event.currentTarget.classList.add('selected');
-    }
+    };
 
-    function startGame() {
+    const startGame = () => {
         if (selectedStadiumChoice === null) {
             alert("Por favor, elige un estadio."); 
             return;
@@ -93,10 +79,10 @@ function initGame() {
         nextWeekButton.addEventListener('click', handleNextWeek);
         btnUpgradeStadium.addEventListener('click', upgradeStadium);
         inputTicketPrice.addEventListener('change', setTicketPrice);
-    }
+    };
 
     // --- Funciones del Juego ---
-    function handleNextWeek() {
+    const handleNextWeek = () => {
         if (isGameOver) return; 
 
         advanceWeek();
@@ -106,9 +92,23 @@ function initGame() {
             isGameOver = true;
             showGameOverScreen();
         }
-    }
+    };
 
-    function handleRestart() {
+    const handleRestart = () => {
         location.reload();
+    };
+
+    // --- Conexión de Botones (DESPUÉS de definir las funciones) ---
+    try {
+        btnToStadium.addEventListener('click', goToStadiumScreen);
+        stadiumOptions.forEach(option => {
+            option.addEventListener('click', handleStadiumSelect);
+        });
+        btnToGame.addEventListener('click', startGame);
+        btnRestart.addEventListener('click', handleRestart);
+        
+    } catch (e) {
+        console.error("¡ERROR FATAL al conectar botones!");
+        console.error(e);
     }
 }
