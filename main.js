@@ -1,73 +1,63 @@
 // main.js
 import { state } from './core.js';
-import { renderUI } from './ui.js';
+import { renderUI, showGameOverScreen } from './ui.js'; // <-- MODIFICADO
 import { advanceWeek } from './calendar.js';
-// ¡NUEVO! Importamos nuestras nuevas funciones
 import { upgradeStadium, setTicketPrice } from './management.js';
+import { checkBankruptcy } from './bankruptcy.js'; // <-- ¡NUEVO!
 
-// Esperar a que el DOM esté completamente cargado
+// Variable para saber si el juego terminó
+let isGameOver = false;
+
 document.addEventListener('DOMContentLoaded', () => {
     initGame();
 });
 
 function initGame() {
-    // --- Elementos de Pantalla 1 (Nombre) ---
+    // --- Pantallas ---
     const screen1 = document.getElementById('screen-1-name');
-    const clubNameInput = document.getElementById('club-name-input');
-    const btnToStadium = document.getElementById('btn-to-stadium');
-
-    // --- Elementos de Pantalla 2 (Estadio) ---
     const screen2 = document.getElementById('screen-2-stadium');
+    const screen3 = document.getElementById('screen-3-game');
+
+    // --- Botones de Flujo ---
+    const btnToStadium = document.getElementById('btn-to-stadium');
     const stadiumOptions = document.querySelectorAll('.stadium-option');
     const btnToGame = document.getElementById('btn-to-game');
 
-    // --- Elementos de Pantalla 3 (Juego) ---
-    const screen3 = document.getElementById('screen-3-game');
+    // --- Botones del Juego ---
     const nextWeekButton = document.getElementById('btn-next-week');
     const btnUpgradeStadium = document.getElementById('btn-upgrade-stadium');
     const inputTicketPrice = document.getElementById('input-ticket-price');
+    
+    // --- Botón de Game Over (NUEVO) ---
+    const btnRestart = document.getElementById('btn-restart');
 
-    // --- Variable local para guardar la elección ---
+    // --- Variable local ---
     let selectedStadiumChoice = null;
+    isGameOver = false; // Reseteamos el estado del juego
 
-    // --- Lógica del Flujo ---
-
-    /**
-     * PASO 1: Validar el nombre y pasar a la pantalla de estadio
-     */
+    // --- Lógica de Flujo ---
+    // ... (Las funciones goToStadiumScreen y handleStadiumSelect no cambian) ...
     function goToStadiumScreen() {
         const clubName = clubNameInput.value;
-
         if (clubName.trim() === "") {
-            alert("Por favor, escribe un nombre para tu club.");
-            return;
+            alert("Por favor, escribe un nombre para tu club."); return;
         }
-
         state.club = clubName;
         screen1.style.display = "none";
         screen2.style.display = "block";
     }
 
-    /**
-     * PASO 2: Manejar el clic en una opción de estadio
-     */
     function handleStadiumSelect(event) {
         selectedStadiumChoice = event.currentTarget.dataset.choice;
-        stadiumOptions.forEach(option => {
-            option.classList.remove('selected');
-        });
+        stadiumOptions.forEach(option => option.classList.remove('selected'));
         event.currentTarget.classList.add('selected');
     }
 
-    /**
-     * PASO 3: Validar el estadio y comenzar el juego
-     */
+    // ... (La función startGame no cambia) ...
     function startGame() {
         if (selectedStadiumChoice === null) {
-            alert("Por favor, elige un estadio.");
-            return;
+            alert("Por favor, elige un estadio."); return;
         }
-
         if (selectedStadiumChoice === "propio") {
             state.stadium.name = "El Fortín";
             state.stadium.capacity = 8000;
@@ -81,35 +71,45 @@ function initGame() {
             state.stadium.isOwned = false;
             state.stadium.level = 1; 
         }
-        
         state.ticketPrice = 15; 
-
         screen2.style.display = "none";
         screen3.style.display = "block";
-
         renderUI();
-
-        // --- ACTIVAR TODOS LOS BOTONES DEL JUEGO ---
-        // ¡MIRA QUÉ LIMPIO QUEDÓ ESTO!
-        // main.js solo "conecta" el botón con la función importada.
         nextWeekButton.addEventListener('click', handleNextWeek);
-        btnUpgradeStadium.addEventListener('click', upgradeStadium); // <-- CAMBIADO
-        inputTicketPrice.addEventListener('change', setTicketPrice); // <-- CAMBIADO
+        btnUpgradeStadium.addEventListener('click', upgradeStadium);
+        inputTicketPrice.addEventListener('change', setTicketPrice);
     }
 
     // --- Funciones del Juego ---
 
     /**
-     * PASO 4: Loop principal del juego
+     * PASO 4: Loop principal del juego (¡MODIFICADO!)
      */
     function handleNextWeek() {
+        // Si el juego ya terminó, no hagas nada
+        if (isGameOver) return; 
+
+        // 1. Avanza la semana (se pagan costos)
         advanceWeek();
+        // 2. Actualiza la pantalla (se muestra el dinero nuevo)
         renderUI();
+        
+        // 3. (NUEVO) Revisa si estamos en quiebra
+        if (checkBankruptcy()) {
+            isGameOver = true;
+            showGameOverScreen(); // Muestra la pantalla de Game Over
+        }
     }
 
-    // --- ¡YA NO ESTÁN LAS FUNCIONES GRANDES AQUÍ! ---
-    // La lógica de 'handleUpgradeStadium' y 'handleTicketPriceChange'
-    // fue movida a management.js
+    /**
+     * (NUEVA FUNCIÓN)
+     * Lógica para el botón de reiniciar
+     */
+    function handleRestart() {
+        // La forma más fácil de reiniciar: recargar la página.
+        location.reload();
+    }
+
 
     // --- Conexión de Botones Iniciales ---
     try {
@@ -118,8 +118,12 @@ function initGame() {
             option.addEventListener('click', handleStadiumSelect);
         });
         btnToGame.addEventListener('click', startGame);
+        
+        // (NUEVO) Conectar el botón de reinicio
+        btnRestart.addEventListener('click', handleRestart); 
+        
     } catch (e) {
-        console.error("¡ERROR FATAL al conectar botones de flujo!");
+        console.error("¡ERROR FATAL al conectar botones!");
         console.error(e);
     }
 }
