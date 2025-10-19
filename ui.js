@@ -1,6 +1,5 @@
 // ui.js
 import { state } from './core.js'; 
-// ¡NUEVO! Importamos la lista de entrenadores
 import { getAvailableCoaches } from './staff.js';
 
 // --- IDs de los KPIs ---
@@ -19,7 +18,7 @@ const elStadiumCapacity = document.getElementById('display-stadium-capacity');
 const elStadiumControls = document.getElementById('stadium-management-controls');
 const elTicketPriceInput = document.getElementById('input-ticket-price');
 
-// --- (NUEVO) IDs de Gestión Deportiva ---
+// --- IDs de Gestión Deportiva ---
 const elCoachName = document.getElementById('display-coach-name');
 const elCoachSalary = document.getElementById('display-coach-salary');
 const coachModal = document.getElementById('screen-5-coach');
@@ -45,7 +44,7 @@ export function renderUI() {
   // Gestión
   elTicketPriceInput.value = state.ticketPrice;
   
-  // (NUEVO) Gestión Deportiva
+  // Gestión Deportiva
   elCoachName.textContent = state.coach.name;
   elCoachSalary.textContent = state.coach.salary;
 
@@ -117,14 +116,8 @@ function renderCoachList() {
             </ul>
         `;
         
-        // ¡Importante! Esto es temporal.
-        // Hacemos que el clic en el entrenador llame a una función
-        // que AÚN NO HEMOS CREADO en management.js
-        // Por ahora, solo mostrará un alert.
-        coachDiv.addEventListener('click', () => {
-            alert(`¡Contratar a ${coach.name}! (Lógica pendiente en management.js)`);
-            // Aquí es donde llamaremos a 'hireCoach(coach.id)'
-        });
+        // ¡LA LÓGICA DEL "ALERT" FUE BORRADA DE AQUÍ!
+        // Esta es la versión correcta.
 
         coachListContainer.appendChild(coachDiv);
     });
