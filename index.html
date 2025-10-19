@@ -1,18 +1,38 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
+    <meta charset="UTF-8">
     <title>Gerente Deportivo</title>
+    <style>
+        body { font-family: sans-serif; padding: 20px; }
+        #game-screen { display: none; } /* Oculto por defecto */
+        #setup-screen input { font-size: 1.2em; padding: 5px; }
+        #setup-screen button { font-size: 1.2em; padding: 5px; }
+        .kpi { margin-bottom: 10px; font-size: 1.1em; }
+    </style>
 </head>
 <body>
-    <h1>Sport Lima</h1>
-    
-    <div>Semana: <span id="display-week">1</span></div>
-    <div>Temporada: <span id="display-season">1</span></div>
-    <div>Dinero: $<span id="display-money">10000</span></div>
-    <div>Moral: <span id="display-morale">75</span></div>
-    
-    <button id="btn-next-week">Avanzar Semana</button>
-    
+
+    <div id="setup-screen">
+        <h1>Bienvenido, Gerente</h1>
+        <p>Elige el nombre de tu club para comenzar:</p>
+        <input type"text" id="club-name-input" placeholder="Ej: Sport Lima FC">
+        <button id="start-game-btn">Comenzar Carrera</button>
+    </div>
+
+    <div id="game-screen">
+        <h1><span id="display-club-name"></span></h1>
+        
+        <div class="kpi">Semana: <span id="display-week">1</span></div>
+        <div class="kpi">Temporada: <span id="display-season">1</span></div>
+        <div class="kpi">Dinero: $<span id="display-money">10000</span></div>
+        <div class="kpi">Moral: <span id="display-morale">75</span></div>
+        
+        <hr>
+        <button id="btn-next-week">Avanzar Semana</button>
+    </div>
+
     <script src="main.js" type="module"></script>
+
 </body>
 </html>
