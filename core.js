@@ -5,5 +5,13 @@ export const state = {
   money: 10000,
   morale: 75,
   reputation: 40,
-  club: "", // ¡Cambiado! Ahora está vacío por defecto.
+  club: "",
+  
+  // --- NUEVO ESTADO ---
+  // Guardaremos la info del estadio aquí
+  stadium: {
+    name: "",
+    capacity: 0,
+    costPerWeek: 0
+  }
 };
