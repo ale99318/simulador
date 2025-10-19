@@ -5,10 +5,11 @@
     <title>Gerente Deportivo</title>
     <style>
         body { font-family: sans-serif; padding: 20px; }
-        /* Ocultamos las pantallas 2, 3 y 4 por defecto */
+        /* Ocultamos las pantallas 2, 3, 4 y la nueva 5 */
         #screen-2-stadium { display: none; }
         #screen-3-game { display: none; }
-        #screen-4-gameover { display: none; } /* <-- MODIFICACIÓN 1 */
+        #screen-4-gameover { display: none; }
+        #screen-5-coach { display: none; } /* <-- NUEVA PANTALLA OCULTA */
 
         input { font-size: 1.2em; padding: 5px; }
         button { font-size: 1.2em; padding: 5px; cursor: pointer; }
@@ -31,6 +32,29 @@
         }
         .pro { color: green; }
         .con { color: red; }
+
+        /* (NUEVO) Estilos para el modal de entrenadores */
+        #screen-5-coach {
+            position: fixed; 
+            top: 0; 
+            left: 0; 
+            width: 100%; 
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            /* display: none; (ya está arriba, pero por si acaso) */
+            display: none; 
+            justify-content: center; 
+            align-items: center;
+        }
+        #coach-modal-content {
+            background: white; 
+            padding: 20px; 
+            border-radius: 8px;
+            width: 80%; 
+            max-width: 500px;
+        }
+        .coach-option { border: 1px solid #ddd; padding: 10px; margin-top: 10px; cursor: pointer; }
+        .coach-option:hover { background-color: #f4f4f4; }
     </style>
 </head>
 <body>
@@ -89,6 +113,14 @@
         </div>
 
         <hr>
+        
+        <h2>Gestión Deportiva</h2>
+        <div class="kpi">Entrenador: <span id="display-coach-name">Ninguno</span></div>
+        <div class="kpi">Salario DT: $<span id="display-coach-salary">0</span> / semana</div>
+        <button id="btn-open-coach-modal">Buscar Entrenador</button>
+        
+        <hr>
+        
         <h2>Gestión Financiera</h2>
         <label for="input-ticket-price">Precio de Entradas: $</label>
         <input type="number" id="input-ticket-price" value="15" min="1">
@@ -104,6 +136,18 @@
             Tu deuda superó el límite de $20,000.
         </p>
         <button id="btn-restart">Volver a Empezar</button>
+    </div>
+
+    <div id="screen-5-coach">
+        <div id="coach-modal-content">
+            <h2>Contratar Entrenador</h2>
+            <p>El entrenador actual será despedido (sin costo). El nuevo salario se pagará cada semana.</p>
+            
+            <div id="coach-list-container"></div>
+            
+            <hr>
+            <button id="btn-close-coach-modal">Cerrar</button>
+        </div>
     </div>
 
     <script src="main.js" type="module"></script>
