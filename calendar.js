@@ -1,17 +1,18 @@
 // calendar.js
-import { state } from './core.js'; // Importa el estado
+import { state } from './core.js'; 
 
 export function advanceWeek() {
   state.week++;
   
-  // Lógica de prueba simple
-  state.money -= 500; // Gastos semanales
-  state.morale--;     // La moral baja si no pasa nada
+  // --- LÓGICA MODIFICADA ---
+  // Ahora el costo semanal es dinámico
+  state.money -= state.stadium.costPerWeek; 
+  state.morale--;     
   
   if (state.week > 52) {
     state.week = 1;
     state.season++;
   }
   
-  console.log(`Avanzando a la semana ${state.week}. Dinero: ${state.money}`);
+  console.log(`Semana ${state.week}. Costo Estadio: ${state.stadium.costPerWeek}. Dinero: ${state.money}`);
 }
