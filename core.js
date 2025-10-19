@@ -5,5 +5,5 @@ export const state = {
   money: 10000,
   morale: 75,
   reputation: 40,
-  club: "Sport Lima",
+  club: "", // ¡Cambiado! Ahora está vacío por defecto.
 };
