@@ -12,6 +12,15 @@ export const state = {
   stadium: {
     name: "",
     capacity: 0,
-    costPerWeek: 0
+    costPerWeek: 0,
+
+
+    // ¡NUEVO!
+  coach: {
+    name: "Ninguno",
+    style: "N/A",
+    salary: 0
+  
   }
+  
 };
