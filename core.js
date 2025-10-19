@@ -21,5 +21,5 @@ export const state = {
     name: "Ninguno",
     style: "N/A",
     salary: 0
-  }
+  },
 };
