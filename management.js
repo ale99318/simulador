@@ -85,7 +85,8 @@ function hireCoach(coachId) {
     
     // 3. Actualizar el estado (core.js)
     state.coach.name = newCoach.name;
-    state.coach.style = newCoach.style; // (Aún no lo usamos, pero lo guardamos)
+    // 'style' no está en la data de staff.js, usaremos 'name' o 'formation'
+    state.coach.style = newCoach.formation; // Guardamos la formación
     state.coach.salary = newCoach.salary;
     
     // 4. Actualizar la UI principal
