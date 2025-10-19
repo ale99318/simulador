@@ -2,10 +2,11 @@
 import { state } from './core.js';
 import { renderUI } from './ui.js';
 import { advanceWeek } from './calendar.js';
+// ¡NUEVO! Importamos nuestras nuevas funciones
+import { upgradeStadium, setTicketPrice } from './management.js';
 
 // Esperar a que el DOM esté completamente cargado
 document.addEventListener('DOMContentLoaded', () => {
-    console.log("DOM cargado. Inicializando juego...");
     initGame();
 });
 
@@ -35,22 +36,16 @@ function initGame() {
      * PASO 1: Validar el nombre y pasar a la pantalla de estadio
      */
     function goToStadiumScreen() {
-        console.log("Botón 'Siguiente' presionado");
         const clubName = clubNameInput.value;
 
-        // Validación
         if (clubName.trim() === "") {
             alert("Por favor, escribe un nombre para tu club.");
             return;
         }
 
-        // Guardar el nombre en el estado
         state.club = clubName;
-
-        // Cambiar de pantalla
         screen1.style.display = "none";
         screen2.style.display = "block";
-        console.log("Mostrando Pantalla 2 (Estadio)");
     }
 
     /**
@@ -58,29 +53,21 @@ function initGame() {
      */
     function handleStadiumSelect(event) {
         selectedStadiumChoice = event.currentTarget.dataset.choice;
-
-        // Quitar 'selected' de todas las opciones
         stadiumOptions.forEach(option => {
             option.classList.remove('selected');
         });
-        
-        // Añadir 'selected' solo a la que hicimos clic
         event.currentTarget.classList.add('selected');
-        console.log("Estadio elegido:", selectedStadiumChoice);
     }
 
     /**
      * PASO 3: Validar el estadio y comenzar el juego
      */
     function startGame() {
-        console.log("Botón 'Comenzar Carrera' presionado");
-        // Validación
         if (selectedStadiumChoice === null) {
             alert("Por favor, elige un estadio.");
             return;
         }
 
-        // Guardar los datos del estadio en el estado
         if (selectedStadiumChoice === "propio") {
             state.stadium.name = "El Fortín";
             state.stadium.capacity = 8000;
@@ -97,18 +84,17 @@ function initGame() {
         
         state.ticketPrice = 15; 
 
-        // Cambiar de pantalla
         screen2.style.display = "none";
         screen3.style.display = "block";
-        console.log("Mostrando Pantalla 3 (Juego)");
 
-        // "Pintar" la interfaz del juego por primera vez
         renderUI();
 
         // --- ACTIVAR TODOS LOS BOTONES DEL JUEGO ---
+        // ¡MIRA QUÉ LIMPIO QUEDÓ ESTO!
+        // main.js solo "conecta" el botón con la función importada.
         nextWeekButton.addEventListener('click', handleNextWeek);
-        btnUpgradeStadium.addEventListener('click', handleUpgradeStadium);
-        inputTicketPrice.addEventListener('change', handleTicketPriceChange);
+        btnUpgradeStadium.addEventListener('click', upgradeStadium); // <-- CAMBIADO
+        inputTicketPrice.addEventListener('change', setTicketPrice); // <-- CAMBIADO
     }
 
     // --- Funciones del Juego ---
@@ -117,82 +103,21 @@ function initGame() {
      * PASO 4: Loop principal del juego
      */
     function handleNextWeek() {
-        console.log("Avanzando semana...");
         advanceWeek();
         renderUI();
     }
 
-    /**
-     * Mejora el estadio
-     */
-    function handleUpgradeStadium() {
-        const cost = 50000; 
-
-        // 1. Validaciones
-        if (!state.stadium.isOwned) {
-            alert("No puedes mejorar un estadio que no es tuyo.");
-            return;
-        }
-        if (state.money < cost) {
-            alert("¡No tienes suficiente dinero! Necesitas $" + cost);
-            return;
-        }
-
-        // 2. Aplicar cambios
-        state.money -= cost;
-        state.stadium.level++;
-        state.stadium.capacity += 5000; 
-        state.stadium.costPerWeek += 1000; 
-        
-        alert(`¡Felicidades! Has mejorado tu estadio a Nivel ${state.stadium.level}.
-        Nueva Capacidad: ${state.stadium.capacity}
-        Nuevo Mantenimiento: $${state.stadium.costPerWeek}/semana`);
-
-        // 3. Actualizar la pantalla
-        renderUI();
-    }
-
-    /**
-     * Cambia el precio de la entrada
-     */
-    function handleTicketPriceChange(event) {
-        let newPrice = parseInt(event.target.value);
-        if (newPrice < 1 || isNaN(newPrice)) {
-            newPrice = 1;
-        }
-        
-        state.ticketPrice = newPrice;
-        console.log("Nuevo precio de entrada fijado en:", state.ticketPrice);
-        renderUI(); 
-    }
+    // --- ¡YA NO ESTÁN LAS FUNCIONES GRANDES AQUÍ! ---
+    // La lógica de 'handleUpgradeStadium' y 'handleTicketPriceChange'
+    // fue movida a management.js
 
     // --- Conexión de Botones Iniciales ---
-    console.log("Conectando botones...");
     try {
-        if (btnToStadium) {
-            btnToStadium.addEventListener('click', goToStadiumScreen);
-            console.log("✅ Botón 'Siguiente' conectado.");
-        } else {
-            console.error("❌ No se encontró el botón 'btn-to-stadium'");
-        }
-        
-        if (stadiumOptions.length > 0) {
-            stadiumOptions.forEach(option => {
-                option.addEventListener('click', handleStadiumSelect);
-            });
-            console.log("✅ Opciones de estadio conectadas.");
-        } else {
-            console.error("❌ No se encontraron opciones de estadio");
-        }
-        
-        if (btnToGame) {
-            btnToGame.addEventListener('click', startGame);
-            console.log("✅ Botón 'Comenzar Carrera' conectado.");
-        } else {
-            console.error("❌ No se encontró el botón 'btn-to-game'");
-        }
-        
-        console.log("🎮 Todos los botones de flujo conectados correctamente.");
+        btnToStadium.addEventListener('click', goToStadiumScreen);
+        stadiumOptions.forEach(option => {
+            option.addEventListener('click', handleStadiumSelect);
+        });
+        btnToGame.addEventListener('click', startGame);
     } catch (e) {
         console.error("¡ERROR FATAL al conectar botones de flujo!");
         console.error(e);
