@@ -1,8 +1,10 @@
 // main.js
 import { state } from './core.js';
-import { renderUI, showGameOverScreen } from './ui.js';
+// MODIFICADO: Importamos las nuevas funciones del modal
+import { renderUI, showGameOverScreen, openCoachModal, closeCoachModal } from './ui.js'; 
 import { advanceWeek } from './calendar.js';
-import { upgradeStadium, setTicketPrice } from './management.js';
+// MODIFICADO: Importamos las nuevas funciones de management
+import { upgradeStadium, setTicketPrice, initializeCoachListeners } from './management.js'; 
 import { checkBankruptcy } from './bankruptcy.js';
 
 // Variable para saber si el juego terminó
@@ -31,12 +33,16 @@ function initGame() {
     
     // --- Botón de Game Over ---
     const btnRestart = document.getElementById('btn-restart');
+    
+    // --- (NUEVO) Botones del Modal de Entrenadores ---
+    const btnOpenCoachModal = document.getElementById('btn-open-coach-modal');
+    const btnCloseCoachModal = document.getElementById('btn-close-coach-modal');
 
     // --- Variable local ---
     let selectedStadiumChoice = null;
     isGameOver = false;
 
-    // --- Lógica de Flujo (definimos las funciones PRIMERO) ---
+    // --- Lógica de Flujo (sin cambios) ---
     const goToStadiumScreen = () => {
         const clubName = clubNameInput.value;
         if (clubName.trim() === "") {
@@ -76,15 +82,16 @@ function initGame() {
         screen2.style.display = "none";
         screen3.style.display = "block";
         renderUI();
+        
+        // Conectar botones del juego
         nextWeekButton.addEventListener('click', handleNextWeek);
         btnUpgradeStadium.addEventListener('click', upgradeStadium);
         inputTicketPrice.addEventListener('change', setTicketPrice);
     };
 
-    // --- Funciones del Juego ---
+    // --- Funciones del Juego (sin cambios) ---
     const handleNextWeek = () => {
         if (isGameOver) return; 
-
         advanceWeek();
         renderUI();
         
@@ -97,15 +104,30 @@ function initGame() {
     const handleRestart = () => {
         location.reload();
     };
+    
+    // --- (NUEVA FUNCIÓN) Lógica para abrir el modal ---
+    const handleOpenCoachModal = () => {
+        // 1. Llama a ui.js para mostrar el modal y pintar la lista
+        openCoachModal();
+        // 2. Llama a management.js para dar "vida" a los botones de esa lista
+        initializeCoachListeners(); 
+    };
 
-    // --- Conexión de Botones (DESPUÉS de definir las funciones) ---
+    // --- Conexión de Botones (MODIFICADO) ---
     try {
+        // Flujo inicial
         btnToStadium.addEventListener('click', goToStadiumScreen);
         stadiumOptions.forEach(option => {
             option.addEventListener('click', handleStadiumSelect);
         });
         btnToGame.addEventListener('click', startGame);
+        
+        // Game Over
         btnRestart.addEventListener('click', handleRestart);
+        
+        // (NUEVO) Conexiones del Modal de Entrenadores
+        btnOpenCoachModal.addEventListener('click', handleOpenCoachModal);
+        btnCloseCoachModal.addEventListener('click', closeCoachModal);
         
     } catch (e) {
         console.error("¡ERROR FATAL al conectar botones!");
