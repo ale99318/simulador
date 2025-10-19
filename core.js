@@ -7,20 +7,19 @@ export const state = {
   reputation: 40,
   club: "",
   
-  // --- NUEVO ESTADO ---
-  // Guardaremos la info del estadio aquí
   stadium: {
     name: "",
     capacity: 0,
     costPerWeek: 0,
-
-
-    // ¡NUEVO!
+    isOwned: false,
+    level: 1
+  },
+  
+  ticketPrice: 15,
+  
   coach: {
     name: "Ninguno",
     style: "N/A",
     salary: 0
-  
   }
-  
-};
+}; // <-- La línea 26 debe ser ESTA (la llave y el punto y coma)
