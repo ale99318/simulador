@@ -13,5 +13,5 @@ export function advanceWeek() {
     state.season++;
   }
   
-  console.log(`Avanzando a la semana ${state.week}`);
+  console.log(`Avanzando a la semana ${state.week}. Dinero: ${state.money}`);
 }
