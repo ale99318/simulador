@@ -1,19 +1,25 @@
 // core.js
-export const state = {  // <--- 1. ABRE la caja grande "state"
-
-  week: 1,             // (Contenido de state)
-  money: 10000,        // (Contenido de state)
+export const state = {
+  week: 1,
+  season: 1,
+  money: 10000,
+  morale: 75,
+  reputation: 40,
+  club: "",
   
-  stadium: {           // <--- 2. ABRE la caja pequeña "stadium"
-     name: "",
-     capacity: 0
-  },                   // <--- 2. CIERRA la caja pequeña "stadium"
+  stadium: {
+    name: "",
+    capacity: 0,
+    costPerWeek: 0,
+    isOwned: false,
+    level: 1
+  },
   
-  coach: {             // <--- 3. ABRE la caja pequeña "coach"
+  ticketPrice: 15,
+  
+  coach: {
     name: "Ninguno",
     style: "N/A",
     salary: 0
-  }                    // <--- 3. CIERRA la caja pequeña "coach"
-
-}; // <--- 1. CIERRA la caja grande "state"
-   // (El ; que te daba error iba después de esto)
+  }
+}; // <-- La línea 26 debe ser ESTA (la llave y el punto y coma)
