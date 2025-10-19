@@ -18,8 +18,8 @@ function initGame() {
     const screen2 = document.getElementById('screen-2-stadium');
     const screen3 = document.getElementById('screen-3-game');
 
-    // --- Botones de Flujo ---
-    const clubNameInput = document.getElementById('club-name-input'); // <-- ¡CORREGIDO!
+    // --- Inputs y Botones de Flujo ---
+    const clubNameInput = document.getElementById('club-name-input');
     const btnToStadium = document.getElementById('btn-to-stadium');
     const stadiumOptions = document.querySelectorAll('.stadium-option');
     const btnToGame = document.getElementById('btn-to-game');
@@ -34,9 +34,23 @@ function initGame() {
 
     // --- Variable local ---
     let selectedStadiumChoice = null;
-    isGameOver = false; // Reseteamos el estado del juego
+    isGameOver = false;
 
-    // --- Lógica de Flujo ---
+    // --- Conexión de Botones Iniciales (PRIMERO conectamos los eventos) ---
+    try {
+        btnToStadium.addEventListener('click', goToStadiumScreen);
+        stadiumOptions.forEach(option => {
+            option.addEventListener('click', handleStadiumSelect);
+        });
+        btnToGame.addEventListener('click', startGame);
+        btnRestart.addEventListener('click', handleRestart);
+        
+    } catch (e) {
+        console.error("¡ERROR FATAL al conectar botones!");
+        console.error(e);
+    }
+
+    // --- Lógica de Flujo (DESPUÉS definimos las funciones) ---
     function goToStadiumScreen() {
         const clubName = clubNameInput.value;
         if (clubName.trim() === "") {
@@ -82,47 +96,19 @@ function initGame() {
     }
 
     // --- Funciones del Juego ---
-
-    /**
-     * Loop principal del juego
-     */
     function handleNextWeek() {
-        // Si el juego ya terminó, no hagas nada
         if (isGameOver) return; 
 
-        // 1. Avanza la semana (se pagan costos)
         advanceWeek();
-        // 2. Actualiza la pantalla (se muestra el dinero nuevo)
         renderUI();
         
-        // 3. Revisa si estamos en quiebra
         if (checkBankruptcy()) {
             isGameOver = true;
-            showGameOverScreen(); // Muestra la pantalla de Game Over
+            showGameOverScreen();
         }
     }
 
-    /**
-     * Lógica para el botón de reiniciar
-     */
     function handleRestart() {
-        // La forma más fácil de reiniciar: recargar la página.
         location.reload();
-    }
-
-    // --- Conexión de Botones Iniciales ---
-    try {
-        btnToStadium.addEventListener('click', goToStadiumScreen);
-        stadiumOptions.forEach(option => {
-            option.addEventListener('click', handleStadiumSelect);
-        });
-        btnToGame.addEventListener('click', startGame);
-        
-        // Conectar el botón de reinicio
-        btnRestart.addEventListener('click', handleRestart); 
-        
-    } catch (e) {
-        console.error("¡ERROR FATAL al conectar botones!");
-        console.error(e);
     }
 }
