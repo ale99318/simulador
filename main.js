@@ -1,9 +1,9 @@
 // main.js
 import { state } from './core.js';
-import { renderUI, showGameOverScreen } from './ui.js'; // <-- MODIFICADO
+import { renderUI, showGameOverScreen } from './ui.js';
 import { advanceWeek } from './calendar.js';
 import { upgradeStadium, setTicketPrice } from './management.js';
-import { checkBankruptcy } from './bankruptcy.js'; // <-- ¡NUEVO!
+import { checkBankruptcy } from './bankruptcy.js';
 
 // Variable para saber si el juego terminó
 let isGameOver = false;
@@ -19,6 +19,7 @@ function initGame() {
     const screen3 = document.getElementById('screen-3-game');
 
     // --- Botones de Flujo ---
+    const clubNameInput = document.getElementById('club-name-input'); // <-- ¡CORREGIDO!
     const btnToStadium = document.getElementById('btn-to-stadium');
     const stadiumOptions = document.querySelectorAll('.stadium-option');
     const btnToGame = document.getElementById('btn-to-game');
@@ -28,7 +29,7 @@ function initGame() {
     const btnUpgradeStadium = document.getElementById('btn-upgrade-stadium');
     const inputTicketPrice = document.getElementById('input-ticket-price');
     
-    // --- Botón de Game Over (NUEVO) ---
+    // --- Botón de Game Over ---
     const btnRestart = document.getElementById('btn-restart');
 
     // --- Variable local ---
@@ -36,11 +37,11 @@ function initGame() {
     isGameOver = false; // Reseteamos el estado del juego
 
     // --- Lógica de Flujo ---
-    // ... (Las funciones goToStadiumScreen y handleStadiumSelect no cambian) ...
     function goToStadiumScreen() {
         const clubName = clubNameInput.value;
         if (clubName.trim() === "") {
-            alert("Por favor, escribe un nombre para tu club."); return;
+            alert("Por favor, escribe un nombre para tu club."); 
+            return;
         }
         state.club = clubName;
         screen1.style.display = "none";
@@ -53,10 +54,10 @@ function initGame() {
         event.currentTarget.classList.add('selected');
     }
 
-    // ... (La función startGame no cambia) ...
     function startGame() {
         if (selectedStadiumChoice === null) {
-            alert("Por favor, elige un estadio."); return;
+            alert("Por favor, elige un estadio."); 
+            return;
         }
         if (selectedStadiumChoice === "propio") {
             state.stadium.name = "El Fortín";
@@ -83,7 +84,7 @@ function initGame() {
     // --- Funciones del Juego ---
 
     /**
-     * PASO 4: Loop principal del juego (¡MODIFICADO!)
+     * Loop principal del juego
      */
     function handleNextWeek() {
         // Si el juego ya terminó, no hagas nada
@@ -94,7 +95,7 @@ function initGame() {
         // 2. Actualiza la pantalla (se muestra el dinero nuevo)
         renderUI();
         
-        // 3. (NUEVO) Revisa si estamos en quiebra
+        // 3. Revisa si estamos en quiebra
         if (checkBankruptcy()) {
             isGameOver = true;
             showGameOverScreen(); // Muestra la pantalla de Game Over
@@ -102,14 +103,12 @@ function initGame() {
     }
 
     /**
-     * (NUEVA FUNCIÓN)
      * Lógica para el botón de reiniciar
      */
     function handleRestart() {
         // La forma más fácil de reiniciar: recargar la página.
         location.reload();
     }
-
 
     // --- Conexión de Botones Iniciales ---
     try {
@@ -119,7 +118,7 @@ function initGame() {
         });
         btnToGame.addEventListener('click', startGame);
         
-        // (NUEVO) Conectar el botón de reinicio
+        // Conectar el botón de reinicio
         btnRestart.addEventListener('click', handleRestart); 
         
     } catch (e) {
