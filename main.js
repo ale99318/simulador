@@ -3,28 +3,50 @@ import { state } from './core.js';
 import { renderUI } from './ui.js';
 import { advanceWeek } from './calendar.js';
 
-// --- Elementos de la Pantalla 1 (Configuración) ---
-const setupScreen = document.getElementById('setup-screen');
+// --- Elementos de Pantalla 1 (Nombre) ---
+const screen1 = document.getElementById('screen-1-name');
 const clubNameInput = document.getElementById('club-name-input');
-const startGameButton = document.getElementById('start-game-btn');
-const stadiumOptions = document.querySelectorAll('.stadium-option'); // (NUEVO)
+const btnToStadium = document.getElementById('btn-to-stadium');
 
-// --- Elementos de la Pantalla 2 (Juego) ---
-const gameScreen = document.getElementById('game-screen');
+// --- Elementos de Pantalla 2 (Estadio) ---
+const screen2 = document.getElementById('screen-2-stadium');
+const stadiumOptions = document.querySelectorAll('.stadium-option');
+const btnToGame = document.getElementById('btn-to-game');
+
+// --- Elementos de Pantalla 3 (Juego) ---
+const screen3 = document.getElementById('screen-3-game');
 const nextWeekButton = document.getElementById('btn-next-week');
 
 // --- Variable local para guardar la elección ---
-let selectedStadiumChoice = null; // (NUEVO)
+let selectedStadiumChoice = null;
 
-// --- Lógica del Juego ---
+// --- Lógica del Flujo ---
 
 /**
- * (NUEVO) Manejar el clic en una opción de estadio
+ * PASO 1: Validar el nombre y pasar a la pantalla de estadio
+ */
+function goToStadiumScreen() {
+    const clubName = clubNameInput.value;
+
+    // Validación
+    if (clubName.trim() === "") {
+        alert("Por favor, escribe un nombre para tu club.");
+        return;
+    }
+
+    // Guardar el nombre en el estado
+    state.club = clubName;
+
+    // Cambiar de pantalla
+    screen1.style.display = "none";
+    screen2.style.display = "block";
+}
+
+/**
+ * PASO 2: Manejar el clic en una opción de estadio
  */
 function handleStadiumSelect(event) {
-    // 'event.currentTarget' es el div en el que hicimos clic
-    const choice = event.currentTarget.dataset.choice; 
-    selectedStadiumChoice = choice;
+    selectedStadiumChoice = event.currentTarget.dataset.choice; 
 
     // Quitar 'selected' de todas las opciones
     stadiumOptions.forEach(option => {
@@ -33,32 +55,20 @@ function handleStadiumSelect(event) {
     
     // Añadir 'selected' solo a la que hicimos clic
     event.currentTarget.classList.add('selected');
-
-    console.log("Estadio elegido:", choice);
+    console.log("Estadio elegido:", selectedStadiumChoice);
 }
 
 /**
- * Función para iniciar el juego (MODIFICADA)
+ * PASO 3: Validar el estadio y comenzar el juego
  */
 function startGame() {
-    const clubName = clubNameInput.value;
-
-    // Validación 1: Nombre del club
-    if (clubName.trim() === "") {
-        alert("Por favor, escribe un nombre para tu club.");
-        return;
-    }
-    
-    // Validación 2: Elección de estadio (NUEVO)
+    // Validación
     if (selectedStadiumChoice === null) {
         alert("Por favor, elige un estadio.");
         return;
     }
 
-    // 1. Actualizar el estado (core.js)
-    state.club = clubName;
-    
-    // 2. (NUEVO) Actualizar el estado del estadio
+    // Guardar los datos del estadio en el estado
     if (selectedStadiumChoice === "propio") {
         state.stadium.name = "El Fortín";
         state.stadium.capacity = 8000;
@@ -69,21 +79,19 @@ function startGame() {
         state.stadium.costPerWeek = 10000;
     }
 
-    // 3. Ocultar la pantalla de setup
-    setupScreen.style.display = "none";
-    
-    // 4. Mostrar la pantalla de juego
-    gameScreen.style.display = "block";
+    // Cambiar de pantalla
+    screen2.style.display = "none";
+    screen3.style.display = "block";
 
-    // 5. "Pintar" la interfaz por primera vez
+    // "Pintar" la interfaz del juego por primera vez
     renderUI();
 
-    // 6. Activar el botón de "Avanzar Semana"
+    // Activar el botón de "Avanzar Semana" (el loop principal)
     nextWeekButton.addEventListener('click', handleNextWeek);
 }
 
 /**
- * Función para el "Game Loop" principal
+ * PASO 4: Loop principal del juego
  */
 function handleNextWeek() {
   advanceWeek();
@@ -92,10 +100,13 @@ function handleNextWeek() {
 
 // --- Conexión de Botones ---
 
-// Conectar el botón de "Comenzar Carrera"
-startGameButton.addEventListener('click', startGame);
+// 1. Botón de Pantalla 1 a 2
+btnToStadium.addEventListener('click', goToStadiumScreen);
 
-// (NUEVO) Conectar los botones de elección de estadio
+// 2. Opciones de Estadio
 stadiumOptions.forEach(option => {
     option.addEventListener('click', handleStadiumSelect);
 });
+
+// 3. Botón de Pantalla 2 a 3
+btnToGame.addEventListener('click', startGame);
