@@ -5,18 +5,58 @@
     <title>Gerente Deportivo</title>
     <style>
         body { font-family: sans-serif; padding: 20px; }
-        #game-screen { display: none; } /* Oculto por defecto */
+        #game-screen { display: none; }
         #setup-screen input { font-size: 1.2em; padding: 5px; }
         #setup-screen button { font-size: 1.2em; padding: 5px; }
         .kpi { margin-bottom: 10px; font-size: 1.1em; }
+
+        /* --- NUEVO ESTILO --- */
+        /* Estilos para la elección de estadio */
+        #stadium-choice-box { margin-top: 20px; }
+        .stadium-option {
+            border: 2px solid #ccc;
+            padding: 10px;
+            margin: 10px 0;
+            cursor: pointer;
+        }
+        .stadium-option:hover {
+            border-color: #007bff;
+            background-color: #f4f4f4;
+        }
+        .stadium-option.selected { /* Para saber cuál elegimos */
+            background-color: #e0f0ff;
+            border-color: #007bff;
+        }
     </style>
 </head>
 <body>
 
     <div id="setup-screen">
         <h1>Bienvenido, Gerente</h1>
-        <p>Elige el nombre de tu club para comenzar:</p>
+        
+        <p>Elige el nombre de tu club:</p>
         <input type"text" id="club-name-input" placeholder="Ej: Sport Lima FC">
+        
+        <div id="stadium-choice-box">
+            <p>Elige tu estadio inicial:</p>
+            
+            <div class="stadium-option" data-choice="propio">
+                <strong>Estadio Propio: "El Fortín"</strong>
+                <ul>
+                    <li>Capacidad: 8,000</li>
+                    <li>Costo (Mantenimiento): $1,500 / semana</li>
+                </ul>
+            </div>
+            
+            <div class="stadium-option" data-choice="alquilado">
+                <strong>Estadio Alquilado: "Estadio Nacional"</strong>
+                <ul>
+                    <li>Capacidad: 35,000</li>
+                    <li>Costo (Alquiler): $10,000 / semana</li>
+                </ul>
+            </div>
+        </div>
+
         <button id="start-game-btn">Comenzar Carrera</button>
     </div>
 
@@ -27,6 +67,10 @@
         <div class="kpi">Temporada: <span id="display-season">1</span></div>
         <div class="kpi">Dinero: $<span id="display-money">10000</span></div>
         <div class="kpi">Moral: <span id="display-morale">75</span></div>
+        
+        <div class="kpi">Estadio: <span id="display-stadium-name"></span>
+            (Cap: <span id="display-stadium-capacity"></span>)
+        </div>
         
         <hr>
         <button id="btn-next-week">Avanzar Semana</button>
