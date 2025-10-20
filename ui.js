@@ -10,7 +10,7 @@ export function renderUI() {
   // Obtener elementos DENTRO de la función para evitar problemas con elementos ocultos
   const elClubName = document.getElementById('display-club-name');
   const elWeek = document.getElementById('display-week');
-  const elSeason = document.getElementById('display-season');
+  const elSeason = document.getElementById('display-season'); // ✅ CORREGIDO
   const elMoney = document.getElementById('display-money');
   const elMorale = document.getElementById('display-morale');
   const elStadiumName = document.getElementById('display-stadium-name');
