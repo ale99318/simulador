@@ -1,13 +1,13 @@
 // management.js
 import { state } from './core.js';
-// ¡MODIFICADO! Importamos las nuevas funciones de UI y Eventos
 import { renderUI, closeCoachModal, showEventModal } from './ui.js';
 import { getAvailableCoaches } from './staff.js';
-import { getCoachPresentationEvent } from './events.js'; // <-- ¡NUEVO!
+import { getCoachPresentationEvent } from './events.js';
 
 /**
- * Mejora el estadio (Sin cambios)
+ * Mejora el estadio
  */
+// ¡FÍJATE EN EL 'EXPORT'!
 export function upgradeStadium() {
     const cost = 50000; 
 
@@ -33,8 +33,9 @@ export function upgradeStadium() {
 }
 
 /**
- * Cambia el precio de la entrada (Sin cambios)
+ * Cambia el precio de la entrada
  */
+// ¡FÍJATE EN EL 'EXPORT'!
 export function setTicketPrice(event) {
     let newPrice = parseInt(event.target.value);
     if (newPrice < 1 || isNaN(newPrice)) {
@@ -47,11 +48,12 @@ export function setTicketPrice(event) {
 }
 
 
-// --- Lógica de Entrenadores (MODIFICADA) ---
+// --- Lógica de Entrenadores ---
 
 /**
- * Inicializa los listeners para la lista de entrenadores (Sin cambios)
+ * Inicializa los listeners para la lista de entrenadores.
  */
+// ¡¡ESTE ES EL 'EXPORT' QUE TE FALTA!!
 export function initializeCoachListeners() {
     const coachOptions = document.querySelectorAll('.coach-option');
     
@@ -64,7 +66,8 @@ export function initializeCoachListeners() {
 }
 
 /**
- * Contrata un nuevo entrenador basado en su ID (¡MODIFICADO!)
+ * Contrata un nuevo entrenador basado en su ID.
+ * (Esta función NO se exporta, es privada de este módulo)
  */
 function hireCoach(coachId) {
     // 1. Encontrar al entrenador
@@ -78,18 +81,16 @@ function hireCoach(coachId) {
     
     // 2. Actualizar el estado (core.js)
     state.coach.name = newCoach.name;
-    state.coach.style = newCoach.formation; // (Guardamos la formación)
+    state.coach.style = newCoach.formation;
     state.coach.salary = newCoach.salary;
     
-    // 3. Actualizar la UI principal (para que se vea el nombre)
+    // 3. Actualizar la UI principal
     renderUI();
     
     // 4. Cerrar el modal de contratación
     closeCoachModal();
 
-    // 5. (¡NUEVO!) Disparar el evento de la entrevista
-    // Obtenemos el evento de 'events.js'
+    // 5. Disparar el evento de la entrevista
     const presentationEvent = getCoachPresentationEvent();
-    // Le pedimos a 'ui.js' que muestre la entrevista
     showEventModal(presentationEvent);
 }
