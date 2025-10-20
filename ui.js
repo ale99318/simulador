@@ -1,30 +1,29 @@
 // ui.js
 import { state } from './core.js'; 
 import { getAvailableCoaches } from './staff.js';
-// ¡NUEVO! Importamos la lógica de eventos
 import { resolveEventEffect } from './events.js';
 
-// --- IDs de los KPIs (Sin cambios) ---
+// --- IDs de los KPIs (COMPLETO, SIN ABREVIAR) ---
 const elClubName = document.getElementById('display-club-name');
 const elWeek = document.getElementById('display-week');
-// ... (etc) ...
+const elSeason = document.getElementById('display-season'); // <-- ESTA LÍNEA FALTABA
 const elMoney = document.getElementById('display-money');
 const elMorale = document.getElementById('display-morale');
 
-// --- IDs del Estadio (Sin cambios) ---
+// --- IDs del Estadio ---
 const elStadiumName = document.getElementById('display-stadium-name');
-// ... (etc) ...
+const elStadiumLevel = document.getElementById('display-stadium-level');
 const elStadiumCapacity = document.getElementById('display-stadium-capacity');
 const elStadiumControls = document.getElementById('stadium-management-controls');
 const elTicketPriceInput = document.getElementById('input-ticket-price');
 
-// --- IDs de Gestión Deportiva (Sin cambios) ---
+// --- IDs de Gestión Deportiva ---
 const elCoachName = document.getElementById('display-coach-name');
 const elCoachSalary = document.getElementById('display-coach-salary');
 const coachModal = document.getElementById('screen-5-coach');
 const coachListContainer = document.getElementById('coach-list-container');
 
-// --- (NUEVO) IDs del Modal de Eventos ---
+// --- IDs del Modal de Eventos ---
 const eventModal = document.getElementById('screen-6-event');
 const eventTitle = document.getElementById('event-title');
 const eventQuestion = document.getElementById('event-question');
@@ -33,16 +32,14 @@ const eventOptionsContainer = document.getElementById('event-options-container')
 
 /**
  * Función que actualiza TODOS los valores en pantalla (KPIs)
- * (Ahora también actualiza Reputación, que antes no se veía)
  */
 export function renderUI() {
   // KPIs
   elClubName.textContent = state.club; 
   elWeek.textContent = state.week;
-  elSeason.textContent = state.season;
+  elSeason.textContent = state.season; // <-- Esta es la línea 42 que daba el error
   elMoney.textContent = state.money;
   elMorale.textContent = state.morale;
-  // (Faltaba mostrar Reputación, pero por ahora lo dejamos así)
   
   // Estadio
   elStadiumName.textContent = state.stadium.name;
@@ -68,7 +65,15 @@ export function renderUI() {
  * Muestra la pantalla de Game Over (Sin cambios)
  */
 export function showGameOverScreen() {
-  // ... (código igual)
+    const screen3 = document.getElementById('screen-3-game');
+    const screen4 = document.getElementById('screen-4-gameover');
+
+    if (screen3 && screen4) {
+        screen3.style.display = 'none';
+        screen4.style.display = 'block';
+    } else {
+        console.error("No se encontraron las pantallas 'screen-3-game' o 'screen-4-gameover'");
+    }
 }
 
 
