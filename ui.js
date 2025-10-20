@@ -2,6 +2,7 @@
 import { state } from './core.js'; 
 import { getAvailableCoaches } from './staff.js';
 import { resolveEventEffect } from './events.js';
+import { hireCoach } from './management.js'; // ✅ IMPORTAR hireCoach
 
 /**
  * Función que actualiza TODOS los valores en pantalla (KPIs)
@@ -10,7 +11,7 @@ export function renderUI() {
   // Obtener elementos DENTRO de la función para evitar problemas con elementos ocultos
   const elClubName = document.getElementById('display-club-name');
   const elWeek = document.getElementById('display-week');
-  const elSeason = document.getElementById('display-season'); // ✅ CORREGIDO
+  const elSeason = document.getElementById('display-season');
   const elMoney = document.getElementById('display-money');
   const elMorale = document.getElementById('display-morale');
   const elStadiumName = document.getElementById('display-stadium-name');
@@ -101,7 +102,6 @@ function renderCoachList() {
     coaches.forEach(coach => {
         const coachDiv = document.createElement('div');
         coachDiv.className = 'coach-option';
-        coachDiv.dataset.id = coach.id; 
         
         coachDiv.innerHTML = `
             <strong>${coach.name}</strong>
@@ -110,6 +110,11 @@ function renderCoachList() {
                 <li>Salario: $${coach.salary} / semana</li>
             </ul>
         `;
+        
+        // ✅ AGREGAR EL LISTENER DIRECTAMENTE AQUÍ
+        coachDiv.addEventListener('click', () => {
+            hireCoach(coach.id);
+        });
         
         coachListContainer.appendChild(coachDiv);
     });
