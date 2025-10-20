@@ -3,67 +3,51 @@ import { state } from './core.js';
 import { getAvailableCoaches } from './staff.js';
 import { resolveEventEffect } from './events.js';
 
-// --- IDs de los KPIs (¡ESTA ES LA PARTE IMPORTANTE!) ---
-// Asegúrate de que esta sección esté completa
-const elClubName = document.getElementById('display-club-name');
-const elWeek = document.getElementById('display-week');
-const elSeason = document.getElementById('display-season'); // <-- ¡¡ESTA LÍNEA ES LA QUE TE FALTA!!
-const elMoney = document.getElementById('display-money');
-const elMorale = document.getElementById('display-morale');
-
-// --- IDs del Estadio ---
-const elStadiumName = document.getElementById('display-stadium-name');
-const elStadiumLevel = document.getElementById('display-stadium-level');
-const elStadiumCapacity = document.getElementById('display-stadium-capacity');
-const elStadiumControls = document.getElementById('stadium-management-controls');
-const elTicketPriceInput = document.getElementById('input-ticket-price');
-
-// --- IDs de Gestión Deportiva ---
-const elCoachName = document.getElementById('display-coach-name');
-const elCoachSalary = document.getElementById('display-coach-salary');
-const coachModal = document.getElementById('screen-5-coach');
-const coachListContainer = document.getElementById('coach-list-container');
-
-// --- IDs del Modal de Eventos ---
-const eventModal = document.getElementById('screen-6-event');
-const eventTitle = document.getElementById('event-title');
-const eventQuestion = document.getElementById('event-question');
-const eventOptionsContainer = document.getElementById('event-options-container');
-
-
 /**
  * Función que actualiza TODOS los valores en pantalla (KPIs)
  */
 export function renderUI() {
-  // KPIs
-  elClubName.textContent = state.club; 
-  elWeek.textContent = state.week;
-  elSeason.textContent = state.season; // <-- Esta es la línea 42 que da el error
-  elMoney.textContent = state.money;
-  elMorale.textContent = state.morale;
+  // Obtener elementos DENTRO de la función para evitar problemas con elementos ocultos
+  const elClubName = document.getElementById('display-club-name');
+  const elWeek = document.getElementById('display-week');
+  const elSeason = document.getElementById('display-season');
+  const elMoney = document.getElementById('display-money');
+  const elMorale = document.getElementById('display-morale');
+  const elStadiumName = document.getElementById('display-stadium-name');
+  const elStadiumLevel = document.getElementById('display-stadium-level');
+  const elStadiumCapacity = document.getElementById('display-stadium-capacity');
+  const elStadiumControls = document.getElementById('stadium-management-controls');
+  const elTicketPriceInput = document.getElementById('input-ticket-price');
+  const elCoachName = document.getElementById('display-coach-name');
+  const elCoachSalary = document.getElementById('display-coach-salary');
+
+  // KPIs (con validación por si acaso)
+  if (elClubName) elClubName.textContent = state.club;
+  if (elWeek) elWeek.textContent = state.week;
+  if (elSeason) elSeason.textContent = state.season;
+  if (elMoney) elMoney.textContent = state.money;
+  if (elMorale) elMorale.textContent = state.morale;
   
   // Estadio
-  elStadiumName.textContent = state.stadium.name;
-  elStadiumLevel.textContent = state.stadium.level;
-  elStadiumCapacity.textContent = state.stadium.capacity;
+  if (elStadiumName) elStadiumName.textContent = state.stadium.name;
+  if (elStadiumLevel) elStadiumLevel.textContent = state.stadium.level;
+  if (elStadiumCapacity) elStadiumCapacity.textContent = state.stadium.capacity;
 
   // Gestión
-  elTicketPriceInput.value = state.ticketPrice;
+  if (elTicketPriceInput) elTicketPriceInput.value = state.ticketPrice;
   
   // Gestión Deportiva
-  elCoachName.textContent = state.coach.name;
-  elCoachSalary.textContent = state.coach.salary;
+  if (elCoachName) elCoachName.textContent = state.coach.name;
+  if (elCoachSalary) elCoachSalary.textContent = state.coach.salary;
 
   // Lógica condicional del Estadio
-  if (state.stadium.isOwned) {
-    elStadiumControls.style.display = 'block';
-  } else {
-    elStadiumControls.style.display = 'none';
+  if (elStadiumControls) {
+    elStadiumControls.style.display = state.stadium.isOwned ? 'block' : 'none';
   }
 }
 
 /**
- * Muestra la pantalla de Game Over (Sin cambios)
+ * Muestra la pantalla de Game Over
  */
 export function showGameOverScreen() {
     const screen3 = document.getElementById('screen-3-game');
@@ -77,25 +61,41 @@ export function showGameOverScreen() {
     }
 }
 
-
-// --- Funciones del Modal de Entrenadores (Sin cambios) ---
-
+/**
+ * Abre el modal de entrenadores
+ */
 export function openCoachModal() {
+    const coachModal = document.getElementById('screen-5-coach');
     if (coachModal) {
         renderCoachList(); 
         coachModal.style.display = 'flex';
     }
 }
 
+/**
+ * Cierra el modal de entrenadores
+ */
 export function closeCoachModal() {
+    const coachModal = document.getElementById('screen-5-coach');
+    const coachListContainer = document.getElementById('coach-list-container');
+    
     if (coachModal) {
         coachModal.style.display = 'none';
+    }
+    if (coachListContainer) {
         coachListContainer.innerHTML = "";
     }
 }
 
+/**
+ * Renderiza la lista de entrenadores disponibles
+ */
 function renderCoachList() {
     const coaches = getAvailableCoaches();
+    const coachListContainer = document.getElementById('coach-list-container');
+    
+    if (!coachListContainer) return;
+    
     coachListContainer.innerHTML = ""; 
 
     coaches.forEach(coach => {
@@ -115,48 +115,53 @@ function renderCoachList() {
     });
 }
 
-
-// --- (NUEVAS FUNCIONES) Para el Modal de Eventos ---
-
 /**
- * Muestra el modal de eventos y "pinta" la pregunta/respuestas.
- * Recibe un objeto de evento (de events.js)
+ * Muestra el modal de eventos
  */
 export function showEventModal(event) {
+    const eventModal = document.getElementById('screen-6-event');
     if (!eventModal) return;
 
-    // 1. "Pintar" el título y la pregunta
-    eventTitle.textContent = event.title;
-    eventQuestion.textContent = event.question;
-    eventOptionsContainer.innerHTML = ""; // Limpiar opciones anteriores
+    const eventTitle = document.getElementById('event-title');
+    const eventQuestion = document.getElementById('event-question');
+    const eventOptionsContainer = document.getElementById('event-options-container');
 
-    // 2. "Pintar" las opciones de respuesta
-    event.options.forEach(option => {
-        const optionDiv = document.createElement('div');
-        optionDiv.className = 'event-option';
-        optionDiv.textContent = option.text;
-        
-        // 3. Añadir el listener
-        optionDiv.addEventListener('click', () => {
-            // Aplicar el efecto de la respuesta (subir moral, etc.)
-            resolveEventEffect(option.effect);
-            // Cerrar este modal
-            closeEventModal();
+    // Pintar el título y la pregunta
+    if (eventTitle) eventTitle.textContent = event.title;
+    if (eventQuestion) eventQuestion.textContent = event.question;
+    if (eventOptionsContainer) eventOptionsContainer.innerHTML = "";
+
+    // Pintar las opciones de respuesta
+    if (eventOptionsContainer) {
+        event.options.forEach(option => {
+            const optionDiv = document.createElement('div');
+            optionDiv.className = 'event-option';
+            optionDiv.textContent = option.text;
+            
+            optionDiv.addEventListener('click', () => {
+                resolveEventEffect(option.effect);
+                closeEventModal();
+            });
+            
+            eventOptionsContainer.appendChild(optionDiv);
         });
-        
-        eventOptionsContainer.appendChild(optionDiv);
-    });
+    }
 
-    // 4. Mostrar el modal de evento
+    // Mostrar el modal
     eventModal.style.display = 'flex';
 }
 
 /**
- * Oculta el modal de eventos
+ * Cierra el modal de eventos
  */
 export function closeEventModal() {
+    const eventModal = document.getElementById('screen-6-event');
+    const eventOptionsContainer = document.getElementById('event-options-container');
+    
     if (eventModal) {
         eventModal.style.display = 'none';
-        eventOptionsContainer.innerHTML = ""; // Limpiar
+    }
+    if (eventOptionsContainer) {
+        eventOptionsContainer.innerHTML = "";
     }
 }
