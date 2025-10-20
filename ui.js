@@ -1,29 +1,42 @@
 // ui.js
 import { state } from './core.js'; 
 import { getAvailableCoaches } from './staff.js';
+// ¡Esta es la línea 3! Fíjate que no importamos 'hireCoach'
 import { resolveEventEffect } from './events.js';
-import { hireCoach } from './coaches.js'; // ✅ CAMBIADO de './management.js' a './coaches.js'
+
+// --- IDs de los KPIs ---
+const elClubName = document.getElementById('display-club-name');
+const elWeek = document.getElementById('display-week');
+const elSeason = document.getElementById('display-season'); 
+const elMoney = document.getElementById('display-money');
+const elMorale = document.getElementById('display-morale');
+
+// --- IDs del Estadio ---
+const elStadiumName = document.getElementById('display-stadium-name');
+const elStadiumLevel = document.getElementById('display-stadium-level');
+const elStadiumCapacity = document.getElementById('display-stadium-capacity');
+const elStadiumControls = document.getElementById('stadium-management-controls');
+const elTicketPriceInput = document.getElementById('input-ticket-price');
+
+// --- IDs de Gestión Deportiva ---
+const elCoachName = document.getElementById('display-coach-name');
+const elCoachSalary = document.getElementById('display-coach-salary');
+const coachModal = document.getElementById('screen-5-coach');
+const coachListContainer = document.getElementById('coach-list-container');
+
+// --- IDs del Modal de Eventos ---
+const eventModal = document.getElementById('screen-6-event');
+const eventTitle = document.getElementById('event-title');
+const eventQuestion = document.getElementById('event-question');
+const eventOptionsContainer = document.getElementById('event-options-container');
+
 
 /**
  * Función que actualiza TODOS los valores en pantalla (KPIs)
  */
 export function renderUI() {
-  // Obtener elementos DENTRO de la función para evitar problemas con elementos ocultos
-  const elClubName = document.getElementById('display-club-name');
-  const elWeek = document.getElementById('display-week');
-  const elSeason = document.getElementById('display-season');
-  const elMoney = document.getElementById('display-money');
-  const elMorale = document.getElementById('display-morale');
-  const elStadiumName = document.getElementById('display-stadium-name');
-  const elStadiumLevel = document.getElementById('display-stadium-level');
-  const elStadiumCapacity = document.getElementById('display-stadium-capacity');
-  const elStadiumControls = document.getElementById('stadium-management-controls');
-  const elTicketPriceInput = document.getElementById('input-ticket-price');
-  const elCoachName = document.getElementById('display-coach-name');
-  const elCoachSalary = document.getElementById('display-coach-salary');
-
-  // KPIs (con validación por si acaso)
-  if (elClubName) elClubName.textContent = state.club;
+  // KPIs
+  if (elClubName) elClubName.textContent = state.club; 
   if (elWeek) elWeek.textContent = state.week;
   if (elSeason) elSeason.textContent = state.season;
   if (elMoney) elMoney.textContent = state.money;
@@ -62,24 +75,17 @@ export function showGameOverScreen() {
     }
 }
 
-/**
- * Abre el modal de entrenadores
- */
+
+// --- Funciones del Modal de Entrenadores ---
+
 export function openCoachModal() {
-    const coachModal = document.getElementById('screen-5-coach');
     if (coachModal) {
         renderCoachList(); 
         coachModal.style.display = 'flex';
     }
 }
 
-/**
- * Cierra el modal de entrenadores
- */
 export function closeCoachModal() {
-    const coachModal = document.getElementById('screen-5-coach');
-    const coachListContainer = document.getElementById('coach-list-container');
-    
     if (coachModal) {
         coachModal.style.display = 'none';
     }
@@ -88,20 +94,15 @@ export function closeCoachModal() {
     }
 }
 
-/**
- * Renderiza la lista de entrenadores disponibles
- */
 function renderCoachList() {
-    const coaches = getAvailableCoaches();
-    const coachListContainer = document.getElementById('coach-list-container');
-    
     if (!coachListContainer) return;
-    
+    const coaches = getAvailableCoaches();
     coachListContainer.innerHTML = ""; 
 
     coaches.forEach(coach => {
         const coachDiv = document.createElement('div');
         coachDiv.className = 'coach-option';
+        coachDiv.dataset.id = coach.id; 
         
         coachDiv.innerHTML = `
             <strong>${coach.name}</strong>
@@ -111,32 +112,20 @@ function renderCoachList() {
             </ul>
         `;
         
-        // ✅ AGREGAR EL LISTENER DIRECTAMENTE AQUÍ
-        coachDiv.addEventListener('click', () => {
-            hireCoach(coach.id);
-        });
-        
         coachListContainer.appendChild(coachDiv);
     });
 }
 
-/**
- * Muestra el modal de eventos
- */
+
+// --- Funciones del Modal de Eventos ---
+
 export function showEventModal(event) {
-    const eventModal = document.getElementById('screen-6-event');
     if (!eventModal) return;
 
-    const eventTitle = document.getElementById('event-title');
-    const eventQuestion = document.getElementById('event-question');
-    const eventOptionsContainer = document.getElementById('event-options-container');
-
-    // Pintar el título y la pregunta
     if (eventTitle) eventTitle.textContent = event.title;
     if (eventQuestion) eventQuestion.textContent = event.question;
     if (eventOptionsContainer) eventOptionsContainer.innerHTML = "";
 
-    // Pintar las opciones de respuesta
     if (eventOptionsContainer) {
         event.options.forEach(option => {
             const optionDiv = document.createElement('div');
@@ -152,17 +141,10 @@ export function showEventModal(event) {
         });
     }
 
-    // Mostrar el modal
     eventModal.style.display = 'flex';
 }
 
-/**
- * Cierra el modal de eventos
- */
 export function closeEventModal() {
-    const eventModal = document.getElementById('screen-6-event');
-    const eventOptionsContainer = document.getElementById('event-options-container');
-    
     if (eventModal) {
         eventModal.style.display = 'none';
     }
