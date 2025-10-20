@@ -2,7 +2,7 @@
 import { state } from './core.js'; 
 import { getAvailableCoaches } from './staff.js';
 import { resolveEventEffect } from './events.js';
-import { hireCoach } from './management.js'; // ✅ IMPORTAR hireCoach
+import { hireCoach } from './coaches.js'; // ✅ CAMBIADO de './management.js' a './coaches.js'
 
 /**
  * Función que actualiza TODOS los valores en pantalla (KPIs)
