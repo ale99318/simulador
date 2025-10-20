@@ -43,23 +43,10 @@ export function setTicketPrice(event) {
 }
 
 /**
- * Inicializa los listeners para la lista de entrenadores
- */
-export function initializeCoachListeners() {
-    const coachOptions = document.querySelectorAll('.coach-option');
-    
-    coachOptions.forEach(option => {
-        option.addEventListener('click', () => {
-            const coachId = option.dataset.id;
-            hireCoach(coachId);
-        });
-    });
-}
-
-/**
  * Contrata un nuevo entrenador basado en su ID
+ * ✅ EXPORTADA para poder llamarla desde ui.js
  */
-function hireCoach(coachId) {
+export function hireCoach(coachId) {
     console.log("🎯 Intentando contratar entrenador con ID:", coachId);
     
     // 1. Encontrar al entrenador
