@@ -1,8 +1,6 @@
 // management.js
 import { state } from './core.js';
-import { renderUI, closeCoachModal, showEventModal } from './ui.js';
-import { getAvailableCoaches } from './staff.js';
-import { getCoachPresentationEvent } from './events.js';
+import { renderUI } from './ui.js';
 
 /**
  * Mejora el estadio
@@ -40,45 +38,4 @@ export function setTicketPrice(event) {
     state.ticketPrice = newPrice;
     console.log("Nuevo precio de entrada fijado en:", state.ticketPrice);
     renderUI(); 
-}
-
-/**
- * Contrata un nuevo entrenador basado en su ID
- * ✅ EXPORTADA para poder llamarla desde ui.js
- */
-export function hireCoach(coachId) {
-    console.log("🎯 Intentando contratar entrenador con ID:", coachId);
-    
-    // 1. Encontrar al entrenador
-    const coaches = getAvailableCoaches();
-    const newCoach = coaches.find(coach => coach.id === coachId);
-    
-    if (!newCoach) {
-        console.error("❌ No se encontró el entrenador con ID:", coachId);
-        return;
-    }
-    
-    console.log("✅ Entrenador encontrado:", newCoach.name);
-    
-    // 2. Actualizar el estado (core.js)
-    state.coach.name = newCoach.name;
-    state.coach.style = newCoach.formation;
-    state.coach.salary = newCoach.salary;
-    
-    console.log("📝 Estado actualizado:", state.coach);
-    
-    // 3. Actualizar la UI principal
-    renderUI();
-    
-    // 4. Cerrar el modal de contratación
-    closeCoachModal();
-    console.log("🚪 Modal de contratación cerrado");
-    
-    // 5. Disparar el evento de la entrevista
-    const presentationEvent = getCoachPresentationEvent();
-    console.log("🔍 Evento de presentación obtenido:", presentationEvent);
-    
-    // Mostrar el modal de evento
-    showEventModal(presentationEvent);
-    console.log("🎬 Modal de evento mostrado");
 }
