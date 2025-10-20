@@ -1,15 +1,16 @@
 // management.js
 import { state } from './core.js';
-import { renderUI, closeCoachModal } from './ui.js';
-import { getAvailableCoaches } from './staff.js'; // ¡Importante!
+// ¡MODIFICADO! Importamos las nuevas funciones de UI y Eventos
+import { renderUI, closeCoachModal, showEventModal } from './ui.js';
+import { getAvailableCoaches } from './staff.js';
+import { getCoachPresentationEvent } from './events.js'; // <-- ¡NUEVO!
 
 /**
- * Mejora el estadio
+ * Mejora el estadio (Sin cambios)
  */
 export function upgradeStadium() {
     const cost = 50000; 
 
-    // 1. Validaciones
     if (!state.stadium.isOwned) {
         alert("No puedes mejorar un estadio que no es tuyo.");
         return;
@@ -19,7 +20,6 @@ export function upgradeStadium() {
         return;
     }
 
-    // 2. Aplicar cambios
     state.money -= cost;
     state.stadium.level++;
     state.stadium.capacity += 5000; 
@@ -29,12 +29,11 @@ export function upgradeStadium() {
     Nueva Capacidad: ${state.stadium.capacity}
     Nuevo Mantenimiento: $${state.stadium.costPerWeek}/semana`);
 
-    // 3. Actualizar la pantalla
     renderUI();
 }
 
 /**
- * Cambia el precio de la entrada
+ * Cambia el precio de la entrada (Sin cambios)
  */
 export function setTicketPrice(event) {
     let newPrice = parseInt(event.target.value);
@@ -48,14 +47,12 @@ export function setTicketPrice(event) {
 }
 
 
-// --- (NUEVAS FUNCIONES) ---
+// --- Lógica de Entrenadores (MODIFICADA) ---
 
 /**
- * Inicializa los listeners para la lista de entrenadores.
- * ui.js "pinta" la lista, esta función les da "vida".
+ * Inicializa los listeners para la lista de entrenadores (Sin cambios)
  */
 export function initializeCoachListeners() {
-    // Busca los botones que "pintó" ui.js
     const coachOptions = document.querySelectorAll('.coach-option');
     
     coachOptions.forEach(option => {
@@ -67,10 +64,10 @@ export function initializeCoachListeners() {
 }
 
 /**
- * Contrata un nuevo entrenador basado en su ID.
+ * Contrata un nuevo entrenador basado en su ID (¡MODIFICADO!)
  */
 function hireCoach(coachId) {
-    // 1. Encontrar al entrenador en la lista
+    // 1. Encontrar al entrenador
     const coaches = getAvailableCoaches();
     const newCoach = coaches.find(coach => coach.id === coachId);
 
@@ -79,19 +76,20 @@ function hireCoach(coachId) {
         return;
     }
     
-    // 2. Despedir al anterior (si hay) y contratar al nuevo
-    console.log(`Despidiendo a ${state.coach.name}.`);
-    console.log(`Contratando a ${newCoach.name}.`);
-    
-    // 3. Actualizar el estado (core.js)
+    // 2. Actualizar el estado (core.js)
     state.coach.name = newCoach.name;
-    // 'style' no está en la data de staff.js, usaremos 'name' o 'formation'
-    state.coach.style = newCoach.formation; // Guardamos la formación
+    state.coach.style = newCoach.formation; // (Guardamos la formación)
     state.coach.salary = newCoach.salary;
     
-    // 4. Actualizar la UI principal
+    // 3. Actualizar la UI principal (para que se vea el nombre)
     renderUI();
     
-    // 5. Cerrar el modal
+    // 4. Cerrar el modal de contratación
     closeCoachModal();
+
+    // 5. (¡NUEVO!) Disparar el evento de la entrevista
+    // Obtenemos el evento de 'events.js'
+    const presentationEvent = getCoachPresentationEvent();
+    // Le pedimos a 'ui.js' que muestre la entrevista
+    showEventModal(presentationEvent);
 }
